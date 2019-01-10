@@ -36,8 +36,9 @@ public class Krb5Configurator {
         ? findJavaSecurityPath() : StringUtils.EMPTY;
   }
 
-  public static void downloadKrb5FromCluster( String host, SshCredentials sshCredentials ) {
+  public static void downloadKrb5FromCluster( String hosts, SshCredentials sshCredentials ) {
     logger.info( "Start download krb5 from cluster!" );
+    String host = hosts.split(",")[0];
     String rootUtilFolder = getRootUtilityFolder() + File.separator + "kerberos" + File.separator + "krb5.conf";
 
     try {

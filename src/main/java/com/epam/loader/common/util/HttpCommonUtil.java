@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import javax.net.ssl.SSLContext;
 import java.security.KeyManagementException;
-import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 
@@ -38,7 +37,7 @@ public class HttpCommonUtil {
   private SSLContext createSslContext() throws CommonUtilException {
     try {
       SSLContextBuilder sslcb = new SSLContextBuilder();
-      sslcb.loadTrustMaterial( KeyStore.getInstance( KeyStore.getDefaultType() ),
+      sslcb.loadTrustMaterial( null,
         new TrustSelfSignedStrategy() );
 
       return sslcb.build();
