@@ -17,12 +17,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.naming.CommunicationException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class ModifyTestProperties extends BaseSecurityContextHandler {
 
@@ -138,12 +141,12 @@ public class ModifyTestProperties extends BaseSecurityContextHandler {
 
   // determine hive host and set all values for it
   //TODO: Refactor this and other methods - need to create interface(abstract class?) for different hadoop vendors
-  private static void setHiveHost( String pathToTestProperties, String hosts,
+  private static void setHiveHost( String pathToTestProperties, String host,
                                    LoadConfigsManager.ClusterType clusterType,
                                    boolean isSecure, String pathToShim ) {
     String hiveServerNode = "";
     try {
-      for ( String node : hosts.split( "," ) ) {
+      for ( String node : getClusterNodes(host, clusterType) ) {
         if ( CommonUtilHolder.sshCommonUtilInstance().executeCommand( new SshCredentials(), node, 22,
           "ps aux | grep HiveServer2" ).contains( "org.apache.hive.service.server.HiveServer2" ) ) {
           hiveServerNode = node;
@@ -173,7 +176,7 @@ public class ModifyTestProperties extends BaseSecurityContextHandler {
             String fullImpalaConfig =
               new String( IOUtils.toByteArray( CommonUtilHolder.httpCommonUtilInstance().createHttpClient()
                 .execute( CommonUtilHolder.httpCommonUtilInstance()
-                  .createHttpUriRequest( "http://" + hosts.split( "," )[ 0 ].trim()
+                  .createHttpUriRequest( "http://" + host.trim()
                     + ":7180/api/v10/clusters/cluster/services/impala/config?view=FULL" ) )
                 .getEntity().getContent() ) );
             JSONObject obj = new JSONObject( fullImpalaConfig );
@@ -218,6 +221,44 @@ public class ModifyTestProperties extends BaseSecurityContextHandler {
     } catch ( CommonUtilException e ) {
       logger.error( e.getMessage() );
     }
+  }
+
+  private static List<String> getClusterNodes(JSONObject obj) {
+    List<String> clusterNodes = new ArrayList<>();
+    try {
+      JSONArray arr = obj.getJSONArray("items");
+      for (int i = 0; i < arr.length(); i++) {
+        JSONObject obj2 = arr.getJSONObject(i);
+        String hostname = obj2.getString("hostname");
+        clusterNodes.add(hostname);
+      }
+    } catch (JSONException e) {
+      logger.error("JSON exception: " + e);
+    }
+
+    return clusterNodes;
+  }
+
+  private static List<String> getClusterNodes(String host, LoadConfigsManager.ClusterType clusterType ) {
+    List<String> clusterNodes = null;
+    String content;
+    try {
+      if (clusterType.equals(LoadConfigsManager.ClusterType.CDH)) {
+        content = new String(IOUtils.toByteArray(CommonUtilHolder.httpCommonUtilInstance().createHttpClient()
+                        .execute(CommonUtilHolder.httpCommonUtilInstance()
+                                .createHttpUriRequest("http://" + host + ":7180/api/v10/hosts")).getEntity().getContent()));
+      } else {
+        content = new String(IOUtils.toByteArray(CommonUtilHolder.httpCommonUtilInstance().createHttpClient()
+                        .execute(CommonUtilHolder.httpCommonUtilInstance()
+                                .createHttpUriRequest("http://" + host + ":8080/api/v1/hosts")).getEntity().getContent()));
+      }
+      JSONObject obj = new JSONObject(content);
+      clusterNodes = getClusterNodes(obj);
+    } catch ( JSONException | IOException | CommonUtilException e ) {
+      logger.error( e.getMessage() );
+    }
+
+    return clusterNodes;
   }
 
   // add zookeeper host and port

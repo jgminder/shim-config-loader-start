@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.epam</groupId>
-    <artifactId>google-guice-start</artifactId>
-    <version>1.0.0</version>
+    <artifactId>shim-configuration-utility</artifactId>
+    <version>1.0.1</version>
 
     <properties>
         <hadoop.version>2.7.3</hadoop.version>
@@ -152,7 +152,7 @@
         <dependency>
             <groupId>pentaho</groupId>
             <artifactId>pentaho-big-data-legacy</artifactId>
-            <version>8.0.0.0-1</version>
+            <version>8.3.0.0-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.pentaho</groupId>
@@ -319,7 +319,7 @@
         <dependency>
             <groupId>pentaho</groupId>
             <artifactId>metastore</artifactId>
-            <version>8.0.0.0-1</version>
+            <version>8.3.0.0-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-codec</groupId>
@@ -346,7 +346,7 @@
         <dependency>
             <groupId>pentaho-kettle</groupId>
             <artifactId>kettle-core</artifactId>
-            <version>8.0.0.0-1</version>
+            <version>8.3.0.0-SNAPSHOT</version>
         </dependency>
 
     </dependencies>
