@@ -1,6 +1,5 @@
-**Shim Configuration Utility** - find latest version in _releases_ section  
+**Shim Configuration Utility** 
 **Last update** - _01.10.2019_  
-**Your version** - file _version\_%date%_
 
 **Properties setup** 
 1. _Common properties_:  
