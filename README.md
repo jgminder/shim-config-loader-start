@@ -30,9 +30,9 @@ For kerberos wrapping will search krb5.conf file in the same sequence
 3. _Copy drivers_ - copy driver jars, mysql to /lib folder others to shim/lib folder
 4. _Use BiServer setup_ - will show installed shims and download and configure choosing shim in Spoon, PRD, PME and Server, also can be used with separate installed Spoon 
 
-**Using tool**:
+**Using this tool**:
 
-Unzip -bin.zip folder and run java -jar shim-config-loader-1.0.1.jar . Before running check if the user has all necessary permissions.
+Unzip the -bin.zip folder and run java -jar shim-config-loader-1.0.1.jar . Before running check if the user has all necessary permissions.
 
 **What exactly does this tool do**:
 
