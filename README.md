@@ -1,4 +1,5 @@
 **Shim Configuration Utility** 
+
 **Last update** - _01.10.2019_  
 
 **Properties setup** 
